@@ -15,6 +15,7 @@ import {
   type AnimeSeasonData,
 } from "~/hooks/animeApi";
 import { useState } from "react";
+import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -31,11 +32,16 @@ export default function Home() {
   // Fetching anime data
   const {
     data: newSeasonData,
-    maxPage,
+    maxPage: newSeasonMaxPage,
   }: { data: AnimeSeasonData[]; maxPage: number } = fetchAnimeNewSeason(page);
   // Fetching anime search data
-  const { data: searchData }: { data: AnimeSeasonData[]; loading: boolean } =
-    fetchAnimeSearch(searchQuery);
+  const {
+    data: searchData,
+    maxPage: searchMaxPage,
+  }: { data: AnimeSeasonData[]; maxPage: number } = fetchAnimeSearch(
+    searchQuery,
+    page
+  );
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -97,35 +103,35 @@ export default function Home() {
               className="flex flex-col items-center"
               key={anime.mal_id}
             >
-              <Card
-                variant="outlined"
-                sx={{
-                  height: "auto",
-                  width: "225px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  "&:hover": {
-                    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                  },
-                }}
-              >
-                <img
-                  src={anime.images.jpg.image_url}
-                  alt={anime.title}
-                  loading="lazy"
-                />
-              </Card>
-              <h5 className="w-[225px] pt-2 text-white">
-                {anime.title_english}
-              </h5>
+              <Link to={`anime/${anime.mal_id}`}>
+                <Card
+                  variant="outlined"
+                  sx={{
+                    height: "auto",
+                    width: "225px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    "&:hover": {
+                      boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                    },
+                  }}
+                >
+                  <img
+                    src={anime.images.jpg.image_url}
+                    alt={anime.title}
+                    loading="lazy"
+                  />
+                </Card>
+                <h5 className="w-[225px] pt-2 text-white">{anime.title}</h5>
+              </Link>
             </Grid>
           ))}
         </Grid>
 
         <Pagination
-          count={searchQuery == "" ? maxPage : 10}
+          count={searchQuery == "" ? newSeasonMaxPage : searchMaxPage}
           variant="outlined"
           shape="rounded"
           className="flex justify-center mt-4"

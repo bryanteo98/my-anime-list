@@ -11,6 +11,12 @@ export interface AnimeSeasonData {
   };
   title: string;
   title_english: string;
+  title_japanese: string;
+  synopsis: string;
+  score: number;
+  scored_by: number;
+  rank: number;
+  popularity: number;
 }
 
 export interface AnimePagination {
@@ -48,7 +54,7 @@ export function fetchAnimeNewSeason(page: number) {
   return { data, loading, pagination, maxPage };
 }
 
-export function fetchAnimeSearch(query: string) {
+export function fetchAnimeSearch(query: string, page: number) {
   const [data, setData] = useState([]);
   const [maxPage, setMaxPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -56,14 +62,14 @@ export function fetchAnimeSearch(query: string) {
   useEffect(() => {
     const fetchData = async () => {
       if (!query) {
-        setData([]); // Clear the data if query is empty
+        // Clear the data if query is empty
         return;
       }
-
+      setData([]);
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://api.jikan.moe/v4/anime?q=${query}`
+          `https://api.jikan.moe/v4/anime?q=${query}&page=${page}`
         );
         setData(response.data.data || []); // Replace data with new results
         setMaxPage(response.data.pagination.last_visible_page);
@@ -76,7 +82,30 @@ export function fetchAnimeSearch(query: string) {
     };
 
     fetchData();
-  }, [query]);
-  console.log("searchData", data);
+  }, [query, page]);
   return { data, loading, maxPage };
+}
+
+export function fetchSingleAnimeById(id: string) {
+  const [data, setData] = useState<AnimeSeasonData | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `https://api.jikan.moe/v4/anime/${id}`
+        );
+        setData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+  return { data, loading };
 }
