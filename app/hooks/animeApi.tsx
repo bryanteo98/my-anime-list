@@ -26,24 +26,31 @@ export interface AnimePagination {
 }
 
 export function fetchAnimeNewSeason(page: number) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<AnimeSeasonData[]>([]);
   const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState([]);
+  const [pagination, setPagination] = useState<AnimePagination | null>(null);
   const [maxPage, setMaxPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
-      setData([]); // Clear the data before fetching new data
       setLoading(true);
       try {
         const response = await axios.get(
           `https://api.jikan.moe/v4/seasons/now?page=${page}`
         );
-        setData(response.data.data);
+        const uniqueData = Array.from(
+          new Map(
+            (response.data.data as AnimeSeasonData[]).map(
+              (anime: AnimeSeasonData) => [anime.mal_id, anime]
+            )
+          ).values()
+        );
+        setData(uniqueData);
         setPagination(response.data.pagination);
         setMaxPage(response.data.pagination.last_visible_page);
       } catch (error) {
         console.error("Error fetching recommendations:", error);
+        setData([]); // Clear the data in case of an error
       } finally {
         setLoading(false);
       }
@@ -55,7 +62,7 @@ export function fetchAnimeNewSeason(page: number) {
 }
 
 export function fetchAnimeSearch(query: string, page: number) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<AnimeSeasonData[]>([]);
   const [maxPage, setMaxPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -65,13 +72,19 @@ export function fetchAnimeSearch(query: string, page: number) {
         // Clear the data if query is empty
         return;
       }
-      setData([]);
       setLoading(true);
       try {
         const response = await axios.get(
           `https://api.jikan.moe/v4/anime?q=${query}&page=${page}`
         );
-        setData(response.data.data || []); // Replace data with new results
+        const uniqueData = Array.from(
+          new Map(
+            (response.data.data as AnimeSeasonData[]).map(
+              (anime: AnimeSeasonData) => [anime.mal_id, anime]
+            )
+          ).values()
+        );
+        setData(uniqueData); // Replace data with unique results
         setMaxPage(response.data.pagination.last_visible_page);
       } catch (error) {
         console.error("Error fetching recommendations:", error);

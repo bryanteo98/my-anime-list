@@ -16,6 +16,7 @@ import {
 } from "~/hooks/animeApi";
 import { useState } from "react";
 import { Link } from "react-router";
+import AnimeGrid from "~/components/animeGrid";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -27,21 +28,27 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [animeData, setAnimeData] = useState([]);
 
   // Fetching anime data
   const {
     data: newSeasonData,
     maxPage: newSeasonMaxPage,
-  }: { data: AnimeSeasonData[]; maxPage: number } = fetchAnimeNewSeason(page);
+    loading: newSeasonLoading,
+  }: {
+    data: AnimeSeasonData[];
+    maxPage: number;
+    loading: boolean;
+  } = fetchAnimeNewSeason(page);
   // Fetching anime search data
   const {
     data: searchData,
     maxPage: searchMaxPage,
-  }: { data: AnimeSeasonData[]; maxPage: number } = fetchAnimeSearch(
-    searchQuery,
-    page
-  );
+    loading: searchLoading,
+  }: {
+    data: AnimeSeasonData[];
+    maxPage: number;
+    loading: boolean;
+  } = fetchAnimeSearch(searchQuery, page);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
@@ -95,40 +102,10 @@ export default function Home() {
           width: "80%",
         }}
       >
-        <Grid container spacing={2} component="div">
-          {(searchQuery == "" ? newSeasonData : searchData).map((anime) => (
-            <Grid
-              size={{ xs: 12, sm: 3, xl: 2.4 }}
-              component="div"
-              className="flex flex-col items-center"
-              key={anime.mal_id}
-            >
-              <Link to={`anime/${anime.mal_id}`}>
-                <Card
-                  variant="outlined"
-                  sx={{
-                    height: "auto",
-                    width: "225px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    "&:hover": {
-                      boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                    },
-                  }}
-                >
-                  <img
-                    src={anime.images.jpg.image_url}
-                    alt={anime.title}
-                    loading="lazy"
-                  />
-                </Card>
-                <h5 className="w-[225px] pt-2 text-white">{anime.title}</h5>
-              </Link>
-            </Grid>
-          ))}
-        </Grid>
+        <AnimeGrid
+          data={searchQuery == "" ? newSeasonData : searchData}
+          loading={searchQuery == "" ? newSeasonLoading : searchLoading}
+        />
 
         <Pagination
           count={searchQuery == "" ? newSeasonMaxPage : searchMaxPage}
