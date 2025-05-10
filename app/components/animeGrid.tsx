@@ -12,7 +12,7 @@ export default function AnimeGrid({
   if (loading) {
     return (
       <Grid container spacing={2} component="div">
-        {Array.from({ length: 5 }).map((_, index) => (
+        {Array.from({ length: 8 }).map((_, index) => (
           <Grid
             size={{
               xs: 12,
