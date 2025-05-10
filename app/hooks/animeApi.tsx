@@ -65,37 +65,52 @@ export function fetchAnimeSearch(query: string, page: number) {
   const [data, setData] = useState<AnimeSeasonData[]>([]);
   const [maxPage, setMaxPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!query) {
-        // Clear the data if query is empty
-        return;
-      }
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `https://api.jikan.moe/v4/anime?q=${query}&page=${page}`
-        );
-        const uniqueData = Array.from(
-          new Map(
-            (response.data.data as AnimeSeasonData[]).map(
-              (anime: AnimeSeasonData) => [anime.mal_id, anime]
-            )
-          ).values()
-        );
-        setData(uniqueData); // Replace data with unique results
-        setMaxPage(response.data.pagination.last_visible_page);
-      } catch (error) {
-        console.error("Error fetching recommendations:", error);
-        setData([]); // Clear the data in case of an error
-      } finally {
-        setLoading(false);
+    if (!query) {
+      setData([]);
+      return;
+    }
+
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            `https://api.jikan.moe/v4/anime?q=${query}&page=${page}`
+          );
+          const uniqueData = Array.from(
+            new Map(
+              (response.data.data as AnimeSeasonData[]).map(
+                (anime: AnimeSeasonData) => [anime.mal_id, anime]
+              )
+            ).values()
+          );
+          setData(uniqueData);
+          setMaxPage(response.data.pagination.last_visible_page);
+        } catch (error) {
+          console.error("Error fetching recommendations:", error);
+          setData([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }, 400); // 400ms debounce
+
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
       }
     };
-
-    fetchData();
   }, [query, page]);
+
   return { data, loading, maxPage };
 }
 
