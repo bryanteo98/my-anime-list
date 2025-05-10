@@ -5,7 +5,7 @@ import { fetchSingleAnimeById } from "~/hooks/animeApi";
 export default function Anime({ params }: { params: { animeId: string } }) {
   console.log("Anime ID:", params.animeId);
   const { data: anime } = fetchSingleAnimeById(params.animeId);
-  console.log("Anime Data:", anime);
+
   return (
     <Container
       maxWidth={false}

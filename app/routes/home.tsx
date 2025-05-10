@@ -15,7 +15,6 @@ import {
   type AnimeSeasonData,
 } from "~/hooks/animeApi";
 import { useState } from "react";
-import { Link } from "react-router";
 import AnimeGrid from "~/components/animeGrid";
 
 export function meta({}: Route.MetaArgs) {
