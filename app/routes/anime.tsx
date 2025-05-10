@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { fetchSingleAnimeById } from "~/hooks/animeApi";
 
 export default function Anime({ params }: { params: { animeId: string } }) {
-  console.log("Anime ID:", params.animeId);
+  // Fetching anime data
   const { data: anime } = fetchSingleAnimeById(params.animeId);
 
   return (

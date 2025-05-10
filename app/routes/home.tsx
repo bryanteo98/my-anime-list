@@ -1,9 +1,7 @@
 import type { Route } from "./+types/home";
 import {
   Box,
-  Card,
   Container,
-  Grid,
   InputAdornment,
   Pagination,
   TextField,
@@ -57,6 +55,11 @@ export default function Home() {
     setPage(value);
   };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    setPage(1); // Reset to the first page on new search
+  };
+
   return (
     <Container
       maxWidth={false}
@@ -76,7 +79,7 @@ export default function Home() {
           placeholder="Search"
           variant="outlined"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearch}
           slotProps={{
             input: {
               startAdornment: (
@@ -120,6 +123,7 @@ export default function Home() {
             count={searchQuery == "" ? newSeasonMaxPage : searchMaxPage}
             variant="outlined"
             shape="rounded"
+            page={page}
             sx={{
               "& .MuiPaginationItem-root": {
                 color: "white",

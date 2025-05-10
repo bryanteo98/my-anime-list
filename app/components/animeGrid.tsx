@@ -1,4 +1,4 @@
-import { Card, Grid, Skeleton } from "@mui/material";
+import { Card, Grid, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router";
 import type { AnimeSeasonData } from "~/hooks/animeApi";
 
@@ -19,7 +19,7 @@ export default function AnimeGrid({
               sm: 6,
               md: 5,
               lg: 4,
-              xl: 2,
+              xl: 3,
             }}
             component="div"
             className="flex flex-col items-center"
@@ -38,6 +38,34 @@ export default function AnimeGrid({
     );
   }
 
+  if (!data || data.length === 0) {
+    return (
+      <Grid
+        container
+        spacing={2}
+        component="div"
+        justifyContent="center"
+        alignItems="center"
+        style={{ minHeight: 300 }}
+      >
+        <Grid
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 5,
+            lg: 4,
+            xl: 3,
+          }}
+          className="flex flex-col items-center"
+        >
+          <Typography className="text-white text-center" variant="h5">
+            No results found
+          </Typography>
+        </Grid>
+      </Grid>
+    );
+  }
+
   return (
     <Grid container spacing={2} component="div">
       {data.map((anime) => (
@@ -47,7 +75,7 @@ export default function AnimeGrid({
             sm: 6,
             md: 5,
             lg: 4,
-            xl: 2,
+            xl: 3,
           }}
           component="div"
           className="flex flex-col items-center"
