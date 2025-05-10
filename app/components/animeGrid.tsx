@@ -14,7 +14,13 @@ export default function AnimeGrid({
       <Grid container spacing={2} component="div">
         {Array.from({ length: 5 }).map((_, index) => (
           <Grid
-            size={{ xs: 12, sm: 3, xl: 2.4 }}
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 5,
+              lg: 4,
+              xl: 2,
+            }}
             component="div"
             className="flex flex-col items-center"
             key={index}
@@ -36,7 +42,13 @@ export default function AnimeGrid({
     <Grid container spacing={2} component="div">
       {data.map((anime) => (
         <Grid
-          size={{ xs: 12, sm: 3, xl: 2.4 }}
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 5,
+            lg: 4,
+            xl: 2,
+          }}
           component="div"
           className="flex flex-col items-center"
           key={anime.mal_id}
@@ -45,8 +57,9 @@ export default function AnimeGrid({
             <Card
               variant="outlined"
               sx={{
-                height: "auto",
-                width: "225px",
+                width: "100%",
+                maxWidth: 225,
+                aspectRatio: "225 / 320",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -54,15 +67,31 @@ export default function AnimeGrid({
                 "&:hover": {
                   boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                 },
+                margin: "0 auto",
               }}
             >
               <img
                 src={anime.images.jpg.image_url}
                 alt={anime.title}
                 loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: 320,
+                  objectFit: "cover",
+                  borderRadius: 4,
+                }}
               />
             </Card>
-            <h5 className="w-[225px] pt-2 text-white">{anime.title}</h5>
+            <h5
+              className="pt-2 text-white text-center break-words"
+              style={{
+                width: 225,
+                margin: "0 auto",
+              }}
+            >
+              {anime.title}
+            </h5>
           </Link>
         </Grid>
       ))}

@@ -64,13 +64,14 @@ export default function Home() {
       sx={{
         mx: "auto",
         my: 2,
-        width: "calc(100% - 200px)",
-        border: "2px solid white",
-        borderRadius: 1,
+        px: { xs: 1, sm: 2, md: 4 },
+        width: { xs: "100%", md: "calc(100% - 200px)" },
+        border: { xs: "none", md: "2px solid white" },
+        borderRadius: { xs: 0, md: 1 },
       }}
       className="h-full flex flex-col items-center pb-5"
     >
-      <Box sx={{ mb: 4, mt: 4, width: "80%" }}>
+      <Box sx={{ mb: 4, mt: 4, width: { xs: "100%", sm: "90%", md: "80%" } }}>
         <TextField
           fullWidth
           placeholder="Search"
@@ -99,7 +100,8 @@ export default function Home() {
         sx={{
           mx: "auto",
           my: 2,
-          width: "80%",
+          width: { xs: "100%", sm: "90%", md: "80%" },
+          px: { xs: 0, sm: 2 },
         }}
       >
         <AnimeGrid
@@ -107,23 +109,31 @@ export default function Home() {
           loading={searchQuery == "" ? newSeasonLoading : searchLoading}
         />
 
-        <Pagination
-          count={searchQuery == "" ? newSeasonMaxPage : searchMaxPage}
-          variant="outlined"
-          shape="rounded"
+        <Box
           className="flex justify-center mt-4"
           sx={{
-            "& .MuiPaginationItem-root": {
-              color: "white",
-              borderColor: "white",
-            },
-            "& .Mui-selected": {
-              backgroundColor: "white !important",
-              color: "black !important",
-            },
+            display: "flex",
+            justifyContent: "center",
+            mt: 4,
           }}
-          onChange={handleChangePage}
-        />
+        >
+          <Pagination
+            count={searchQuery == "" ? newSeasonMaxPage : searchMaxPage}
+            variant="outlined"
+            shape="rounded"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "white",
+                borderColor: "white",
+              },
+              "& .Mui-selected": {
+                backgroundColor: "white !important",
+                color: "black !important",
+              },
+            }}
+            onChange={handleChangePage}
+          />
+        </Box>
       </Container>
     </Container>
   );

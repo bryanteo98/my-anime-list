@@ -12,14 +12,19 @@ export default function Anime({ params }: { params: { animeId: string } }) {
       sx={{
         mx: "auto",
         my: 2,
-        width: "calc(100% - 200px)",
+        width: { xs: "100%", md: "calc(100% - 200px)" },
         border: "2px solid white",
         borderRadius: 1,
+        p: { xs: 1, sm: 2 },
       }}
       className="h-full flex flex-col items-center pb-5 text-white"
     >
       <Box
-        sx={{ display: "flex", justifyContent: "flex-start", width: "100%" }}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          width: "100%",
+        }}
       >
         <Link to="/">
           <Button
@@ -35,24 +40,32 @@ export default function Anime({ params }: { params: { animeId: string } }) {
         sx={{
           mx: "auto",
           my: 2,
-          width: "80%",
+          width: { xs: "100%", sm: "90%", md: "80%" },
+          p: { xs: 0, sm: 2 },
         }}
       >
         <Grid container spacing={2}>
           <Grid
-            size={{ xs: 12, sm: 2, xl: 2 }}
-            component="div"
+            size={{ xs: 12, sm: 4, md: 4, lg: 4, xl: 2 }}
+            component={"div"}
             className="flex flex-col items-center"
           >
-            <img
+            <Box
+              component="img"
               src={anime?.images.jpg.image_url}
               alt={anime?.title}
               loading="lazy"
+              sx={{
+                width: { xs: "70%", sm: "100%", xl: "100%" },
+                maxWidth: 250,
+                borderRadius: 2,
+                boxShadow: 3,
+              }}
             />
           </Grid>
           <Grid
-            size={{ xs: 12, sm: 10, xl: 10 }}
-            component="div"
+            size={{ xs: 12, sm: 8, md: 8, lg: 8, xl: 10 }}
+            component={"div"}
             className="flex flex-col items-left"
           >
             <Typography variant="h5">{anime?.title}</Typography>
@@ -69,17 +82,24 @@ export default function Anime({ params }: { params: { animeId: string } }) {
                 margin: "16px 0",
               }}
             />
-            <Typography variant="subtitle1">Sysnopsis</Typography>
+            <Typography variant="subtitle1">Synopsis</Typography>
             <Typography variant="body1">{anime?.synopsis}</Typography>
-            <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={2}
+              sx={{ mt: 2 }}
+              alignItems="stretch"
+            >
               <Box
                 sx={{
                   mt: 2,
                   p: 2,
                   border: "1px solid white",
                   borderRadius: 1,
-                  display: "inline-block",
                   backgroundColor: "rgba(12, 131, 75, 0.76)",
+                  flex: 1,
+                  minWidth: 0,
+                  maxWidth: 250,
                 }}
               >
                 <Typography variant="h6" sx={{ textAlign: "center" }}>
@@ -101,8 +121,10 @@ export default function Anime({ params }: { params: { animeId: string } }) {
                   p: 2,
                   border: "1px solid white",
                   borderRadius: 1,
-                  display: "inline-block",
                   backgroundColor: "rgba(48, 154, 241, 0.83)",
+                  flex: 1,
+                  minWidth: 0,
+                  maxWidth: 250,
                 }}
               >
                 <Typography variant="h6" sx={{ textAlign: "center" }}>
@@ -121,8 +143,10 @@ export default function Anime({ params }: { params: { animeId: string } }) {
                   p: 2,
                   border: "1px solid white",
                   borderRadius: 1,
-                  display: "inline-block",
                   backgroundColor: "rgba(230, 36, 236, 0.57)",
+                  flex: 1,
+                  minWidth: 0,
+                  maxWidth: 250,
                 }}
               >
                 <Typography variant="h6" sx={{ textAlign: "center" }}>
